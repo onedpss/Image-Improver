@@ -1,6 +1,6 @@
 # Image Improver
 
-python program for image enhancement via **Real-ESRGAN ncnn-vulkan**
+Python program for image enhancement via **Real-ESRGAN ncnn-vulkan**
 
 1. Maximum quality without PyTorch
 2. Fast mode without AI (interpolation + light sharpness).
@@ -38,3 +38,4 @@ python Image_Improver.py
 
 - NCNN can produce small tile seams compared to the PyTorch version (this is a feature of tile inference).
 - The repository intentionally does not contain weights and binaries — they are pulled up separately or on the first download.
+
