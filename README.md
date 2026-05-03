@@ -12,9 +12,20 @@ Python program for image enhancement via **Real-ESRGAN ncnn-vulkan**
 
 ## Preview
 
-| Before (original) | After (AI upscaling) |
-| :-------------: | :------------------: |
-| ![Original low-resolution image](docs/samples/example-before.png) | ![After Real-ESRGAN upscaling](docs/samples/example-after.png) |
+<table>
+  <tr>
+    <th align="center">Before (original)</th>
+    <th align="center">After (AI upscaling)</th>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+      <img src="docs/samples/example-before.png" alt="Original low-resolution image" width="400">
+    </td>
+    <td align="center" valign="top">
+      <img src="docs/samples/example-after.png" alt="After Real-ESRGAN upscaling" width="400">
+    </td>
+  </tr>
+</table>
 
 ## Installation:
 
