@@ -14,7 +14,8 @@ Python program for image enhancement via **Real-ESRGAN ncnn-vulkan**
 ### Linux ###
 
 ```bash
-cd "Image Improver"
+git clone https://github.com/onedpss/Image-Improver.git
+cd Image-Improver
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -23,7 +24,8 @@ pip install -r requirements.txt
 ### Windows ###
 
 ```bash
-cd "Image Improver"
+git clone https://github.com/onedpss/Image-Improver.git
+cd Image-Improver
 python -m venv .venv
 Set-ExecutionPolicy RemoteSigned -Scope Process #If use PowerShell
 .venv\Scripts\activate
