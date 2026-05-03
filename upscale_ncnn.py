@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import platform
 import shutil
+import ssl
 import stat
 import subprocess
 import sys
 import tempfile
+import urllib.error
 import urllib.request
 import zipfile
 from collections.abc import Callable
@@ -28,6 +30,48 @@ DEFAULT_MODEL = "realesrgan-x4plus"
 
 _DEMO_MEDIA_SUFFIXES = frozenset({".jpg", ".jpeg", ".png", ".webp", ".bmp", ".gif"})
 _EXTRA_DOC_NAMES = frozenset({"readme_ubuntu.md"})
+
+
+def _download_file(url: str, target_path: Path, progress_hook: Callable[[int, int, int], object] | None) -> None:
+    """
+    Download helper with TLS fallback for Windows/venv setups that miss CA store.
+    First try default system certs, then fallback to certifi bundle (if installed).
+    """
+    try:
+        urllib.request.urlretrieve(url, target_path, reporthook=progress_hook)
+        return
+    except urllib.error.URLError as err:
+        cert_err = "CERTIFICATE_VERIFY_FAILED" in str(err).upper()
+        if not cert_err:
+            raise
+
+    try:
+        import certifi  # type: ignore
+    except Exception as cert_err:
+        raise RuntimeError(
+            "TLS certificate verification failed while downloading NCNN.\n"
+            "Install cert bundle and retry:\n"
+            "pip install certifi\n\n"
+            "Or download the archive manually from:\n"
+            "https://github.com/xinntao/Real-ESRGAN/releases"
+        ) from cert_err
+
+    context = ssl.create_default_context(cafile=certifi.where())
+    with urllib.request.urlopen(url, context=context) as response:
+        total = int(response.headers.get("Content-Length", "0"))
+        downloaded = 0
+        block_size = 1024 * 128
+        blocks = 0
+        with target_path.open("wb") as out:
+            while True:
+                chunk = response.read(block_size)
+                if not chunk:
+                    break
+                out.write(chunk)
+                downloaded += len(chunk)
+                blocks += 1
+                if progress_hook:
+                    progress_hook(blocks, block_size, total)
 
 def _strip_ncnn_bundle_extras(bundle_root: Path) -> None:
     """Remove demo media and extra readme from the unpacked Real-ESRGAN ncnn archive."""
@@ -171,7 +215,7 @@ def download_ncnn_bundle(
 
     zip_path = dest_dir / "_realesrgan-ncnn-vulkan-download.zip"
     try:
-        urllib.request.urlretrieve(url, zip_path, reporthook=progress_hook)
+        _download_file(url, zip_path, progress_hook)
         with zipfile.ZipFile(zip_path, "r") as zf:
             zf.extractall(dest_dir)
     finally:

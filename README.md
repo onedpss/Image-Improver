@@ -19,6 +19,12 @@ source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+If you test in a fresh Windows VM and NCNN download fails with `CERTIFICATE_VERIFY_FAILED`, run:
+
+```bash
+pip install --upgrade certifi
+```
+
 ## AI upscaling (Recommended)
 
 1. Download the **realesrgan-ncnn-vulkan** archive for your OS from [Real-ESRGAN release page](https://github.com/xinntao/Real-ESRGAN/releases) (search for files like `realesrgan-ncnn-vulkan-*-windows.zip` / `*-ubuntu.zip` / `*-macos.zip`).
