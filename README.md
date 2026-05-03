@@ -10,8 +10,17 @@ Python program for image enhancement via **Real-ESRGAN ncnn-vulkan**
 - Python 3.11+ (Newer ones will do.)
 - [tkinter](https://wiki.python.org/moin/TkInter) (on Linux, the distribution package is usually `tk')
 
+## Preview
+
+
+| Before (original) | After (AI upscaling) |
+| ----------------- | -------------------- |
+|                   |                      |
+
+
 ## Installation:
-### Linux ###
+
+### Linux
 
 ```bash
 git clone https://github.com/onedpss/Image-Improver.git
@@ -21,7 +30,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Windows ###
+### Windows
 
 ```bash
 git clone https://github.com/onedpss/Image-Improver.git
