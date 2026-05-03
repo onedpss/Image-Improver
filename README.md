@@ -10,12 +10,23 @@ Python program for image enhancement via **Real-ESRGAN ncnn-vulkan**
 - Python 3.11+ (Newer ones will do.)
 - [tkinter](https://wiki.python.org/moin/TkInter) (on Linux, the distribution package is usually `tk')
 
-## Installation
+## Installation:
+## Linux
 
 ```bash
 cd "Image Improver"
 python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+## Windows
+
+```bash
+cd "Image Improver"
+python -m venv .venv
+Set-ExecutionPolicy RemoteSigned -Scope Process #If use PowerShell
+.venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
