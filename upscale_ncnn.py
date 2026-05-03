@@ -172,8 +172,33 @@ def run_ncnn_upscale(
         timeout=timeout,
     )
     if proc.returncode != 0:
-        err = (proc.stderr or proc.stdout or "").strip() or f"код {proc.returncode}"
+        err = (proc.stderr or proc.stdout or "").strip()
+        if not err:
+            err = _explain_windows_ncnn_exit(proc.returncode)
         raise RuntimeError(f"NCNN finished with an error: {err}")
+
+
+def _explain_windows_ncnn_exit(code: int) -> str:
+    """Decode common Windows crash/loader exit codes for clearer user messages."""
+    if sys.platform != "win32":
+        return f"код {code}"
+    if code == 3221225781:
+        return (
+            "код 3221225781 (0xC0000135): missing DLL dependency.\n"
+            "Install Microsoft Visual C++ Redistributable 2015-2022 (x64) and Vulkan Runtime,\n"
+            "then restart the app and try again."
+        )
+    if code == 3221225501:
+        return (
+            "код 3221225501 (0xC0000025): binary blocked or incompatible with system policy.\n"
+            "Try re-extracting NCNN bundle and run the app as a normal user from a writable folder."
+        )
+    if code == 3221225477:
+        return (
+            "код 3221225477 (0xC0000005): access violation while running NCNN.\n"
+            "Usually GPU/driver/runtime issue; update GPU driver and Vulkan Runtime."
+        )
+    return f"код {code}"
 
 
 def lite_upscale(
