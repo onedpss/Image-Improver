@@ -12,6 +12,7 @@ from upscale_ncnn import (
     DEFAULT_MODEL,
     download_ncnn_bundle,
     find_ncnn_executable,
+    install_windows_prerequisites,
     lite_upscale,
     ncnn_available,
     prepare_ncnn_input,
@@ -52,6 +53,11 @@ class App:
         ttk.Button(toolbar, text="Download NCNN…", command=self._on_download_ncnn).pack(
             side=tk.LEFT, padx=(0, 6)
         )
+        ttk.Button(
+            toolbar,
+            text="Install deps (Win)…",
+            command=self._on_install_win_deps,
+        ).pack(side=tk.LEFT, padx=(0, 6))
 
         self.preview_label = ttk.Label(self.root)
         self.preview_label.pack(fill=tk.BOTH, expand=True, padx=8, pady=8)
@@ -280,6 +286,35 @@ class App:
 
                 def err() -> None:
                     messagebox.showerror("Downloading NCNN", err_text)
+
+                self.root.after(0, err)
+
+        self._run_in_thread(job)
+
+    def _on_install_win_deps(self) -> None:
+        if self._busy:
+            return
+
+        def job() -> None:
+            try:
+                self.root.after(
+                    0,
+                    lambda: self.status_var.set(
+                        "Installing/checking Windows prerequisites…"
+                    ),
+                )
+                result = install_windows_prerequisites()
+
+                def ok() -> None:
+                    messagebox.showinfo("Windows prerequisites", result)
+                    self.status_var.set("Windows prerequisites step finished.")
+
+                self.root.after(0, ok)
+            except Exception as e:
+                err_text = str(e)
+
+                def err() -> None:
+                    messagebox.showerror("Windows prerequisites", err_text)
 
                 self.root.after(0, err)
 

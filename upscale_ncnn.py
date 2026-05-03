@@ -11,6 +11,7 @@ import sys
 import tempfile
 import urllib.error
 import urllib.request
+import webbrowser
 import zipfile
 from collections.abc import Callable
 from pathlib import Path
@@ -30,6 +31,10 @@ DEFAULT_MODEL = "realesrgan-x4plus"
 
 _DEMO_MEDIA_SUFFIXES = frozenset({".jpg", ".jpeg", ".png", ".webp", ".bmp", ".gif"})
 _EXTRA_DOC_NAMES = frozenset({"readme_ubuntu.md"})
+_VC_REDIST_WINGET_ID = "Microsoft.VCRedist.2015+.x64"
+_VC_REDIST_URL = "https://aka.ms/vs/17/release/vc_redist.x64.exe"
+_VULKAN_RUNTIME_URL = "https://vulkan.lunarg.com/sdk/home"
+_WINDOWS_GPU_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html"
 
 
 def _download_file(url: str, target_path: Path, progress_hook: Callable[[int, int, int], object] | None) -> None:
@@ -199,6 +204,48 @@ def _explain_windows_ncnn_exit(code: int) -> str:
             "Usually GPU/driver/runtime issue; update GPU driver and Vulkan Runtime."
         )
     return f"код {code}"
+
+
+def install_windows_prerequisites() -> str:
+    """
+    Best-effort helper for Windows prerequisites:
+    - tries VC++ Redistributable install via winget
+    - opens Vulkan Runtime and GPU driver pages
+    """
+    if platform.system() != "Windows":
+        return "This helper is only needed on Windows."
+
+    notes: list[str] = []
+    winget = shutil.which("winget")
+    if winget:
+        cmd = [
+            winget,
+            "install",
+            "--id",
+            _VC_REDIST_WINGET_ID,
+            "-e",
+            "--accept-package-agreements",
+            "--accept-source-agreements",
+        ]
+        proc = subprocess.run(cmd, capture_output=True, text=True)
+        if proc.returncode == 0:
+            notes.append("VC++ Redistributable installation command completed via winget.")
+        else:
+            notes.append(
+                "winget could not install VC++ Redistributable automatically.\n"
+                f"Install manually: {_VC_REDIST_URL}"
+            )
+    else:
+        notes.append(f"winget not found. Install VC++ manually: {_VC_REDIST_URL}")
+
+    # Vulkan is often delivered via GPU driver package; open official pages.
+    webbrowser.open(_VULKAN_RUNTIME_URL)
+    webbrowser.open(_WINDOWS_GPU_DRIVER_URL)
+    notes.append(
+        "Opened Vulkan Runtime and Intel driver assistant pages in your browser."
+    )
+    notes.append("After installation, restart the app and try AI enhance again.")
+    return "\n\n".join(notes)
 
 
 def lite_upscale(

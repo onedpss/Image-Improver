@@ -33,6 +33,7 @@ pip install --upgrade certifi
 Alternatively, in the application, click **"Download NCNN..."** — the archive will be downloaded and unpacked to `vendor/` automatically (Internet is needed). The official zip also contains sample `input`* images, `.mp4` demos, and `README_ubuntu.md` (Linux); the app removes those after auto-extract so only the binary and `models/` stay. If you unpack manually, you can delete those files yourself.
 
 You need **Vulkan** and a GPU driver; errors are possible on some systems without a GPU, then use the **"Fast (without AI)"** mode.
+On Windows, you can click **"Install deps (Win)…"** to try automatic VC++ installation via `winget` and open Vulkan/GPU driver pages.
 
 ## Launch
 
