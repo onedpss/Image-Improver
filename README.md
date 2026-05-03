@@ -11,7 +11,7 @@ Python program for image enhancement via **Real-ESRGAN ncnn-vulkan**
 - [tkinter](https://wiki.python.org/moin/TkInter) (on Linux, the distribution package is usually `tk')
 
 ## Installation:
-## Linux
+### Linux ###
 
 ```bash
 cd "Image Improver"
@@ -20,7 +20,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Windows
+### Windows ###
 
 ```bash
 cd "Image Improver"
