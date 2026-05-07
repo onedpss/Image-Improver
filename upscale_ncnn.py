@@ -1,7 +1,4 @@
-"""Real-ESRGAN ncnn-vulkan: find executable, run, optional download, lite mode."""
-
 from __future__ import annotations
-
 import platform
 import shutil
 import ssl
@@ -15,7 +12,6 @@ import webbrowser
 import zipfile
 from collections.abc import Callable
 from pathlib import Path
-
 from PIL import Image, ImageFilter
 
 ROOT = Path(__file__).resolve().parent
